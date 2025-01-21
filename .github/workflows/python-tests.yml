@@ -1,0 +1,25 @@
+name: Python Tests in Container
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    container:
+      image: python:3.9-slim  # Lightweight Python container
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt || echo "No requirements file found"
+
+    - name: Run unit tests
+      run: python -m unittest discover
