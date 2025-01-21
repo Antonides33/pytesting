@@ -1,4 +1,4 @@
-name: Python Tests in Container
+name: Python Tests with pytest
 
 on:
   pull_request:
@@ -9,17 +9,19 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    container:
-      image: python:3.9-slim  # Lightweight Python container
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.9
+
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install -r requirements.txt || echo "No requirements file found"
+        pip install -r requirements.txt
 
-    - name: Run unit tests
-      run: python -m unittest discover
+    - name: Run tests with pytest
+      run: pytest --maxfail=1 --disable-warnings
